@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Burgertory Self-Service Kiosk</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="kiosk-header">
+        <h1>Burgertory Express Kiosk</h1>
+        <p class="store-tag">Location: Cloud Infrastructure Lab</p>
+    </header>
+
+    <main class="kiosk-container">
+        <!-- Menu Items Grid -->
+        <section class="menu-grid">
+            <div class="menu-card">
+                <div class="item-badge">Best Seller</div>
+                <h3>Classic Cheeseburger</h3>
+                <p class="description">Premium beef patty, melted cheddar, pickles, and secret burger sauce.</p>
+                <div class="price-row">
+                    <span class="price">$14.50</span>
+                    <button class="btn-add">Add to Order</button>
+                </div>
+            </div>
+
+            <div class="menu-card">
+                <h3>Spicy Chicken Burger</h3>
+                <p class="description">Crispy buttermilk fried chicken, jalapeños, and spicy aioli coleslaw.</p>
+                <div class="price-row">
+                    <span class="price">$15.90</span>
+                    <button class="btn-add">Add to Order</button>
+                </div>
+            </div>
+
+            <div class="menu-card">
+                <h3>Thick Cut Fries</h3>
+                <p class="description">Golden, crispy sea-salt seasoned thick-cut skin-on potato fries.</p>
+                <div class="price-row">
+                    <span class="price">$5.50</span>
+                    <button class="btn-add">Add to Order</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Dynamic Order Summary Panel -->
+        <aside class="order-summary">
+            <h2>Your Order</h2>
+            <div class="order-items">
+                <p class="empty-msg">Select items on the left to customize your tray...</p>
+            </div>
+            <div class="total-section">
+                <div class="total-row"><span>Subtotal:</span> <span>$0.00</span></div>
+                <div class="total-row GST"><span>Includes GST:</span> <span>$0.00</span></div>
+                <button class="btn-checkout" disabled>Proceed to Payment</button>
+            </div>
+        </aside>
+    </main>
+
+    <footer class="kiosk-footer">
+        <p>&copy; 2026 Burgertory Systems. Connected via Automated DevOps Pipeline.</p>
+    </footer>
+</body>
+</html>
