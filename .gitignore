@@ -3,3 +3,9 @@
 *.tfstate
 *.tfstate.backup
 .terraform.lock.hcl
+
+# Supabase local dev
+supabase/.temp/
+supabase/.branches/
+.env.local
+.env.*.local
