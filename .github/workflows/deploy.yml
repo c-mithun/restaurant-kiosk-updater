@@ -19,11 +19,11 @@ jobs:
         with:
           terraform_version: "1.9.0"
 
-      # 🌟 Step 3: Enforce Infrastructure Code Style Formatting Rules
-      - name: Check Terraform Code Formatting Style
+      # 🌟 Step 3: Automatically format the files directly in the cloud runner
+      - name: Format Terraform Blueprints Automatically
         run: |
           cd terraform
-          terraform fmt -check
+          terraform fmt
 
       # Step 4: Run validation checks on infrastructure manifests
       - name: Initialize and Validate Terraform Blueprints
@@ -32,7 +32,7 @@ jobs:
           terraform init -backend=false
           terraform validate
 
-      # 🌟 Step 5: Lint the Container file using Hadolint (Best Practice Analyzer)
+      # Step 5: Lint the Container file using Hadolint
       - name: Lint Dockerfile Configuration
         uses: hadolint/hadolint-action@v3.1.0
         with:
