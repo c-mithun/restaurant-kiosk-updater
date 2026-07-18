@@ -1,6 +1,5 @@
 name: Restaurant Kiosk Automated Deployer
 
-# 1. Trigger this automation execution every single time a push hits the main branch
 on:
   push:
     branches: [ main ]
@@ -10,19 +9,25 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       
-      # Step 2: Extract our code out of the GitHub vault into the runner environment
+      # Step 1: Extract code out of the GitHub repo vault
       - name: Checkout Code Repository
         uses: actions/checkout@v4
 
-      # Step 3: Run a security check to ensure our Terraform files are written perfectly
+      # 🌟 Step 2: Install the official Terraform CLI engine on the virtual machine
+      - name: Setup HashiCorp Terraform CLI
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.9.0"
+
+      # Step 3: Run validation checks on your infrastructure manifests
       - name: Initialize and Validate Terraform Blueprints
         run: |
           cd terraform
           terraform init -backend=false
           terraform validate
 
-      # Step 4: Assemble the standardized Docker image box to verify compilation succeeds
+      # Step 4: Verify the Docker deployment unit compiles cleanly
       - name: Build Kiosk Container Application Image
         run: |
           docker build -t restaurant-kiosk:latest .
-          echo "Container successfully compiled and ready for infrastructure injection!"
+          echo "Container successfully compiled and ready for deployment!"
