@@ -3,63 +3,196 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Burgertory Self-Service Kiosk</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Burgertory Express - Kiosk Terminal</title>
+    <style>
+        :root {
+            --primary: #d32f2f;
+            --dark: #1a1a1a;
+            --light: #f5f5f5;
+            --gray: #666;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--light);
+            color: var(--dark);
+        }
+        header {
+            background-color: var(--primary);
+            color: white;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        h1 { margin: 0; font-size: 2rem; letter-spacing: 1px; }
+        .subtitle { margin: 5px 0 0 0; font-weight: 300; opacity: 0.9; }
+        
+        main {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+        }
+        
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .menu-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.2s;
+        }
+        .menu-card:hover { transform: translateY(-4px); }
+        .menu-card h3 { margin: 0 0 0.5rem 0; font-size: 1.3rem; }
+        .menu-card p { margin: 0 0 1.5rem 0; color: var(--gray); font-size: 0.95rem; line-height: 1.4; }
+        
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .price { font-size: 1.4rem; font-weight: 700; color: var(--primary); }
+        
+        button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        button:hover { background-color: #b71c1c; }
+        
+        .order-basket {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            height: fit-content;
+            position: sticky;
+            top: 2rem;
+        }
+        .order-basket h2 { margin-top: 0; border-bottom: 2px solid var(--light); padding-bottom: 0.75rem; }
+        .basket-items { min-height: 150px; margin-bottom: 1rem; }
+        .basket-item { display: flex; justify-content: space-between; margin-bottom: 0.5rem; font-size: 0.95rem; }
+        .total-row { display: flex; justify-content: space-between; font-weight: 700; font-size: 1.2rem; border-top: 2px solid var(--light); padding-top: 1rem; }
+    </style>
+
+    <!-- 🌟 Bring in the official Supabase Engine -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
-    <header class="kiosk-header">
-        <h1>Burgertory Express Kiosk</h1>
-        <p class="store-tag">Location: Cloud Infrastructure Lab</p>
+
+    <header>
+        <h1>BURGERTORY EXPRESS</h1>
+        <p class="subtitle">Self-Service Terminal Sandbox</p>
     </header>
 
-    <main class="kiosk-container">
-        <!-- Menu Items Grid -->
-        <section class="menu-grid">
-            <div class="menu-card">
-                <div class="item-badge">Best Seller</div>
-                <h3>Classic Cheeseburger</h3>
-                <p class="description">Premium beef patty, melted cheddar, pickles, and secret burger sauce.</p>
-                <div class="price-row">
-                    <span class="price">$14.50</span>
-                    <button class="btn-add">Add to Order</button>
-                </div>
-            </div>
-
-            <div class="menu-card">
-                <h3>Spicy Chicken Burger</h3>
-                <p class="description">Crispy buttermilk fried chicken, jalapeños, and spicy aioli coleslaw.</p>
-                <div class="price-row">
-                    <span class="price">$15.90</span>
-                    <button class="btn-add">Add to Order</button>
-                </div>
-            </div>
-
-            <div class="menu-card">
-                <h3>Thick Cut Fries</h3>
-                <p class="description">Golden, crispy sea-salt seasoned thick-cut skin-on potato fries.</p>
-                <div class="price-row">
-                    <span class="price">$5.50</span>
-                    <button class="btn-add">Add to Order</button>
-                </div>
-            </div>
+    <main>
+        <!-- The items pulled dynamically from the database will inject right here -->
+        <section class="menu-grid" id="menu-container">
+            <p>Connecting to cloud database...</p>
         </section>
 
-        <!-- Dynamic Order Summary Panel -->
-        <aside class="order-summary">
-            <h2>Your Order</h2>
-            <div class="order-items">
-                <p class="empty-msg">Select items on the left to customize your tray...</p>
+        <!-- Order management terminal mockup -->
+        <section class="order-basket">
+            <h2>Your Order Basket</h2>
+            <div class="basket-items" id="basket-container">
+                <p style="color: var(--gray); font-style: italic;">Tap menu items to assemble order...</p>
             </div>
-            <div class="total-section">
-                <div class="total-row"><span>Subtotal:</span> <span>$0.00</span></div>
-                <div class="total-row GST"><span>Includes GST:</span> <span>$0.00</span></div>
-                <button class="btn-checkout" disabled>Proceed to Payment</button>
+            <div class="total-row">
+                <span>Total Amount:</span>
+                <span id="order-total">$0.00</span>
             </div>
-        </aside>
+            <button style="width: 100%; margin-top: 1rem; font-size: 1.1rem;" onclick="alert('Order Sent to Kitchen Pipeline!')">Checkout Order</button>
+        </section>
     </main>
 
-    <footer class="kiosk-footer">
-        <p>&copy; 2026 Burgertory Systems. Connected via Automated DevOps Pipeline.</p>
-    </footer>
+    <script>
+        // 1. Initialize the cloud connection bridge
+        // Replace these placeholder strings with your actual dashboard credentials
+        const supabaseUrl = 'https://YOUR_PROJECT_REF.supabase.co';
+        const supabaseKey = 'YOUR_NEXT_PUBLIC_SUPABASE_ANON_KEY';
+        const supabase = supabaseJs.createClient(supabaseUrl, supabaseKey);
+
+        let currentOrder = [];
+        let runningTotal = 0;
+
+        // 2. Fetch the live menu rows directly from your database
+        async function loadLiveMenu() {
+            const { data: items, error } = await supabase
+                .from('kiosk_menu_items')
+                .select('*')
+                .eq('available', true);
+
+            if (error) {
+                console.error('Error fetching menu data:', error);
+                document.getElementById('menu-container').innerHTML = `<p style="color: red;">Database Connection Error: ${error.message}</p>`;
+                return;
+            }
+
+            const menuContainer = document.getElementById('menu-container');
+            
+            // 3. Dynamically inject the database contents into HTML cards
+            if(items.length === 0) {
+                menuContainer.innerHTML = '<p>No items currently available on the menu.</p>';
+                return;
+            }
+
+            menuContainer.innerHTML = items.map(item => `
+                <div class="menu-card">
+                    <div>
+                        <h3>${item.name}</h3>
+                        <p>${item.description}</p>
+                    </div>
+                    <div class="card-footer">
+                        <span class="price">$${item.price.toFixed(2)}</span>
+                        <button onclick="addToOrder('${item.name.replace(/'/g, "\\'")}', ${item.price})">Add</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // 4. Basket interaction logic
+        function addToOrder(name, price) {
+            currentOrder.push({ name, price });
+            runningTotal += price;
+            updateBasketUI();
+        }
+
+        function updateBasketUI() {
+            const basketContainer = document.getElementById('basket-container');
+            const totalDisplay = document.getElementById('order-total');
+            
+            if (currentOrder.length === 0) {
+                basketContainer.innerHTML = '<p style="color: var(--gray); font-style: italic;">Tap menu items to assemble order...</p>';
+            } else {
+                basketContainer.innerHTML = currentOrder.map(item => `
+                    <div class="basket-item">
+                        <span>${item.name}</span>
+                        <span>$${item.price.toFixed(2)}</span>
+                    </div>
+                `).join('');
+            }
+            
+            totalDisplay.innerText = `$${runningTotal.toFixed(2)}`;
+        }
+
+        // Fire database communication loop on page boot
+        document.addEventListener('DOMContentLoaded', loadLiveMenu);
+    </script>
 </body>
 </html>
